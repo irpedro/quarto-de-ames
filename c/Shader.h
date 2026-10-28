@@ -1,7 +1,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include </home/helton/SPH/LearnOpenGL/includes/glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <string>
 #include <fstream>
@@ -46,7 +47,7 @@ public:
             cShaderFile.close();
             // convert stream into string
             vertexCode   = vShaderStream.str();
-            fragmentCode = cShaderStream.str()+fShaderStream.str();
+            fragmentCode = cShaderStream.str() + "\n" + fShaderStream.str();
 
         }
         catch (std::ifstream::failure& e)
@@ -99,6 +100,12 @@ public:
     void setFloat(const std::string &name, float value) const
     { 
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
+    }
+    void setMat4(const std::string &name, glm::mat4 mat) const {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+    }
+    void setVec3(const std::string &name, glm::vec3 value) const {
+        glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z);
     }
     void setSampler(const std::string &name, unsigned int pos) const
     {

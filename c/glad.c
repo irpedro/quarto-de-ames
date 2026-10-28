@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include </home/helton/SPH/LearnOpenGL/includes/glad/glad.h>
+#include <glad/glad.h>
 
 static void* get_proc(const char *namez);
 
