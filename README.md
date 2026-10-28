@@ -1,5 +1,7 @@
 # Quarto de Ames — Python & C++
 
+<img src="docs/assets/final_1.png" width="600" />
+
 Implementação interativa da ilusão de ótica do Quarto de Ames, desenvolvida em duas linguagens para explorar diferentes aspectos do pipeline gráfico e da engenharia de software.
 
 ## 📁 Estrutura do Repositório

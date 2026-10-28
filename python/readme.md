@@ -2,6 +2,24 @@
 
 **Disciplina:** Fundamentos de Computação Gráfica  
 
+## 📑 Sumário
+1. [A Matemática da Ilusão](#1-a-matemática-da-ilusão-geometria-base)
+2. [Pipeline Gráfico e Oclusão](#2-pipeline-gráfico-e-oclusão-backface-culling)
+3. [Iluminação e Percepção de Profundidade](#3-iluminação-e-a-percepção-de-profundidade)
+4. [Física, Colisão e o "Problema da Montanha"](#4-física-colisão-e-o-problema-da-montanha)
+5. [Referência Visual e Animação](#5-referência-visual-de-escala-colisão-e-animação)
+6. [Arquitetura Modular e Otimizações](#6-arquitetura-modular-e-otimizações)
+7. [Piso Quadriculado via Projective Texture Mapping](#8-piso-quadriculado-via-projective-texture-mapping)
+8. [Rodapé, Sanca, Janelas e Porta](#11-janelas-e-porta-distorcidas)
+9. [Câmera Orbital](#10-câmera-orbital-arcball-no-modo-revelação)
+
+## 🎮 Controles Rápidos
+*   **Setas:** Movem a esfera verde (controlável).
+*   **Espaço:** Alterna entre a Câmera Focal e a Câmera de Revelação.
+*   **P:** Ativa o modo automático (esferas trocam de lugar).
+*   **R:** Reseta as posições das esferas.
+*   **Mouse + WASD:** (No modo revelação) Giram e movem a câmera orbital.
+
 ## 🎯 Visão Geral do Projeto
 O Quarto de Ames é uma ilusão de ótica clássica projetada para distorcer a percepção de profundidade e escala. Quando visto de um ponto de observação específico (o "buraco da fechadura"), o ambiente aparenta ser uma sala cúbica perfeitamente normal. No entanto, a sua geometria real é um hexaedro irregular e trapezoidal. 
 
@@ -21,8 +39,8 @@ Matematicamente, a projeção na tela se iguala:
 
 | Câmera Focal (A Ilusão) | Câmera de Revelação (A Verdade) |
 | :---: | :---: |
-| <img src="../docs/assets/wire_focal.png" width="64%" /> | <img src="../docs/assets/wire_revelacao.png" width="100%" /> |
-*Figuras 1 e 2: O esqueleto geométrico. À esquerda, a projeção perspectiva engana o cérebro formando um quadrado perfeito. À direita, a visão isométrica revela a verdadeira topologia trapezoidal do hexaedro.*
+| <img src="../docs/assets/wire_focal.png" width="80%" /> | <img src="../docs/assets/wire_revelacao.png" width="80%" /> |
+> *Figuras 1 e 2: O esqueleto geométrico. À esquerda, a projeção perspectiva engana o cérebro formando um quadrado perfeito. À direita, a visão isométrica revela a verdadeira topologia trapezoidal do hexaedro.*
 
 ## 👁️ 2. Pipeline Gráfico e Oclusão (Backface Culling)
 
@@ -32,8 +50,8 @@ Na visão de revelação (isométrica), o teto bloqueava a visão do interior. R
 
 | Câmera Focal | Câmera de Revelação |
 | :---: | :---: |
-| <img src="../docs/assets/flat_focal.png" width="80%" /> | <img src="../docs/assets/flat_revelacao.png" width="84%" /> |
-*Figuras 3 e 4: Renderização com cores sólidas. Demonstra o preenchimento dos polígonos e o Backface Culling.*
+| <img src="../docs/assets/flat_focal.png" width="76%" /> | <img src="../docs/assets/flat_revelacao.png" width="80%" /> |
+> *Figuras 3 e 4: Renderização com cores sólidas. Demonstra o preenchimento dos polígonos e o Backface Culling.*
 
 ## 💡 3. Iluminação e a Percepção de Profundidade
 
@@ -42,10 +60,10 @@ O uso de cores sólidas (*Flat Shading*) anulava o volume 3D. Desenvolvemos o **
 *   **Normais em Superfícies Inclinadas:** Como o quarto é trapezoidal, normais fixas não funcionam. Usamos o **Produto Vetorial** (*Cross Product*) entre as arestas dos triângulos para calcular a normal exata perpendicular à inclinação da parede.
 *   **Atenuação Quadrática:** Para forçar o cérebro a ler a profundidade extrema do fundo esquerdo, aplicamos um decaimento de luz por distância: $Atenuação = 1.0 / (1.0 + 0.05d + 0.01d^2)$.
 
-| Câmera Focal | Câmera de Revelação |
+| Câmera Focal com Phong | Câmera de Revelação sem Phong |
 | :---: | :---: |
-| <img src="../docs/assets/phong_focal.png" width="96%" /> | <img src="../docs/assets/phong_revelacao.png" width="100%" /> |
-*Figuras 5 e 6: O modelo de iluminação de Phong. O volume tridimensional é recuperado através do cálculo de normais.*
+| <img src="../docs/assets/phong_focal.png" width="80%" /> | <img src="../docs/assets/phong_revelacao.png" width="80%" /> |
+> *Figuras 5 e 6: O modelo de iluminação de Phong. O volume tridimensional é recuperado através do cálculo de normais.*
 
 ## ⚽ 4. Física, Colisão e o "Problema da Montanha"
 
@@ -58,7 +76,7 @@ A implementação da esfera expôs os limites topológicos do modelo.
 | Chão Distorido | Chão Consertado |
 | :---: | :---: |
 | <img src="../docs/assets/chao_distorcido.png" width="90%" /> | <img src="../docs/assets/chao_consertado.png" width="100%" /> |
-*Figuras 5 e 6: O modelo de iluminação de Phong. O volume tridimensional é recuperado através do cálculo de normais.*
+> *Figuras 5 e 6: O modelo de iluminação de Phong. O volume tridimensional é recuperado através do cálculo de normais.*
 
 ## ⚖️ 5. Referência Visual de Escala, Colisão e Animação
 
