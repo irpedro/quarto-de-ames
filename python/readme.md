@@ -22,17 +22,21 @@ Matematicamente, a projeção na tela se iguala:
 *   Canto Direito: $2 / 10 = 0.2$
 *   Canto Esquerdo: $4 / 20 = 0.2$
 
-> `[INSERIR IMAGEM: Print da câmera focal mostrando o cubo perfeito]`  
-> *Figura 1: Visão da câmera principal (A Ilusão).*
-
-> `[INSERIR IMAGEM: Print da câmera de revelação vista de cima]`  
-> *Figura 2: Visão da câmera de revelação mostrando a distorção trapezoidal real.*
+| Câmera Focal (A Ilusão) | Câmera de Revelação (A Verdade) |
+| :---: | :---: |
+| <img src="../docs/assets/wire_focal.png" width="64%" /> | <img src="../docs/assets/wire_revelacao.png" width="100%" /> |
+*Figuras 1 e 2: O esqueleto geométrico. À esquerda, a projeção perspectiva engana o cérebro formando um quadrado perfeito. À direita, a visão isométrica revela a verdadeira topologia trapezoidal do hexaedro.*
 
 ## 👁️ 2. Pipeline Gráfico e Oclusão (Backface Culling)
 
 Na visão de revelação (isométrica), o teto bloqueava a visão do interior. Remover o teto do código resultaria em erros de memória.
 *   **Solução Técnica:** Implementamos o **Backface Culling** (`glEnable(GL_CULL_FACE)`). 
 *   **Winding Order:** Para o *culling* funcionar sem ocultar o chão e o fundo acidentalmente, reorganizamos os `indices` da geometria para garantir que todas as faces fossem construídas no sentido **Anti-Horário** (Counter-Clockwise) a partir do interior do quarto.
+
+| Câmera Focal | Câmera de Revelação |
+| :---: | :---: |
+| <img src="../docs/assets/flat_focal.png" width="80%" /> | <img src="../docs/assets/flat_revelacao.png" width="84%" /> |
+*Figuras 3 e 4: Renderização com cores sólidas. Demonstra o preenchimento dos polígonos e o Backface Culling.*
 
 ## 💡 3. Iluminação e a Percepção de Profundidade
 
@@ -41,16 +45,23 @@ O uso de cores sólidas (*Flat Shading*) anulava o volume 3D. Desenvolvemos o **
 *   **Normais em Superfícies Inclinadas:** Como o quarto é trapezoidal, normais fixas não funcionam. Usamos o **Produto Vetorial** (*Cross Product*) entre as arestas dos triângulos para calcular a normal exata perpendicular à inclinação da parede.
 *   **Atenuação Quadrática:** Para forçar o cérebro a ler a profundidade extrema do fundo esquerdo, aplicamos um decaimento de luz por distância: $Atenuação = 1.0 / (1.0 + 0.05d + 0.01d^2)$.
 
+| Câmera Focal | Câmera de Revelação |
+| :---: | :---: |
+| <img src="../docs/assets/phong_focal.png" width="96%" /> | <img src="../docs/assets/phong_revelacao.png" width="100%" /> |
+*Figuras 5 e 6: O modelo de iluminação de Phong. O volume tridimensional é recuperado através do cálculo de normais.*
+
 ## ⚽ 4. Física, Colisão e o "Problema da Montanha"
 
 A implementação da esfera expôs os limites topológicos do modelo.
 
-1.  **Colisão em Paredes Diagonais:** A parede do fundo não é reta. Deduzimos a equação linear exata da parede ($Z = 5/3X - 13.333$) e a aplicamos no sistema de física para impedir que a esfera *clipasse* a geometria.
+1.  **Colisão em Paredes Diagonais:** A parede do fundo não é reta. Foi deduzido a equação linear exata da parede ($Z = 5/3X - 13.333$) e aplicada no sistema de física para impedir que a esfera *clipasse* a geometria.
 2.  **Topologia Não-Coplanar ("A Montanha"):** Os quatro vértices do chão têm alturas distintas ($Y=-2$ e $Y=-4$), forçando o OpenGL a dobrar o chão em dois triângulos. A dobra original criava um "vale" no centro, fazendo a esfera afundar.
 3.  **Solução de Level Design:** Invertemos a diagonal nos `indices` (do canto Frente-Esquerdo para o Fundo-Direito). Isso separou o chão perfeitamente: a metade direita virou um plano 100% reto, e a metade esquerda uma rampa lisa e contínua. A função `calcular_y_esfera` amostra 5 pontos sob o raio da bola para garantir que ela role exatamente sobre o relevo.
 
-> `[INSERIR IMAGEM: Desenho ou print demonstrando a diagonal do chão invertida]`  
-> *Figura 3: Correção topológica do chão para eliminar artefatos de colisão.*
+| Chão Distorido | Chão Consertado |
+| :---: | :---: |
+| <img src="../docs/assets/chao_distorcido.png" width="90%" /> | <img src="../docs/assets/chao_consertado.png" width="100%" /> |
+*Figuras 5 e 6: O modelo de iluminação de Phong. O volume tridimensional é recuperado através do cálculo de normais.*
 
 ## ⚖️ 5. Referência Visual de Escala, Colisão e Animação
 
@@ -66,9 +77,10 @@ Uma segunda esfera foi posicionada no canto fundo-esquerdo e permanece **estáti
 | Laranja (referência) | 0.70 | -13.0 | 0.70 / 13.0 ≈ 0.054 |
 
 Quando o usuário move a esfera verde para o fundo, ela parece encolher ao lado da laranja que permanece gigante. **A comparação entre dois objetos idênticos (mesmo que pareçam de tamanhos diferentes) força o cérebro a reconsiderar a profundidade.**
-
-> `[INSERIR IMAGEM: Print mostrando as duas esferas na tela com tamanhos aparentemente iguais]`  
-> *Figura 5: Esfera verde (controlável) e esfera laranja (referência estática) no início do programa.*
+| Esferas Próximas| Esferas Distantes |
+| :---: | :---: |
+| <img src="../docs/assets/esfera_1.png" width="96%" /> | <img src="../docs/assets/esfera_2.png" width="96%" /> | 
+> *Figuras 7 e 8: Esfera verde (controlável) e esfera laranja (referência estática fora do modo automático).*
 
 ### 5.2. Colisão entre Esferas (Plano XZ)
 
@@ -100,9 +112,6 @@ P(t) = P_{início} + (P_{fim} - P_{início}) \cdot fator
 $$
 
 Isso satisfaz o requisito de **"Animação com implementação conduzida em aula"**, usando tempo contínuo e movimento autônomo, sem sacrificar a interatividade manual.
-
-> `[INSERIR IMAGEM: Print do modo automático em execução]`  
-> *Figura 6: Esfera verde em modo automático, animando entre os dois cantos do quarto.*
 
 ## 🏗️ 6. Arquitetura Modular e Otimizações
 
@@ -166,9 +175,6 @@ Uma decisão arquitetural importante: `physics.py` **não importa OpenGL**. Ele 
 - Trocar a engine gráfica não exigiria reescrever a física.
 - O código é mais fácil de entender (uma coisa = uma responsabilidade).
 
-> `[INSERIR IMAGEM: Diagrama de blocos mostrando os módulos e suas dependências]`  
-> *Figura 7: Arquitetura modular do projeto. `physics.py` é independente de OpenGL.*
-
 ## 🧪 7. Experimentos e Decisões de Design
 
 ### 7.1. Parede Frontal com Fechadura — Avaliada e Descartada
@@ -178,12 +184,6 @@ Uma decisão arquitetural importante: `physics.py` **não importa OpenGL**. Ele 
 **Implementação tentada:** Adicionamos uma geometria de parede frontal (em `Z = -4.95`) composta por quatro retângulos que formavam uma moldura ao redor de um buraco retangular central. A câmera focal ficava posicionada atrás desse buraco, simulando a condição de museu.
 
 **Resultado observado:** A moldura quebrou a sensação de imersão. As paredes laterais (vermelha e azul) eram cortadas pela moldura cinza, e o cérebro passou a interpretar a cena como uma **maquete vista de fora** em vez de um **ambiente no qual se está dentro**.
-
-> `[INSERIR IMAGEM: Print da câmera focal com a parede de fechadura ativa]`  
-> *Figura 7a: Tentativa com fechadura — a moldura cinza corta as paredes laterais e destrói a sensação de estar dentro do quarto.*
-
-> `[INSERIR IMAGEM: Print da câmera focal sem a fechadura]`  
-> *Figura 7b: Resultado final sem fechadura — as paredes se estendem pelas bordas da tela e o cérebro interpreta a cena como um ambiente contínuo.*
 
 **Análise técnica:** Em ambientes virtuais monoculares (como este projeto), a imersão depende de **pistas visuais contínuas** — paredes que se estendem além das bordas da tela, perspectiva correta, iluminação coerente. A restrição física do peephole funciona em museus porque o observador tem um olho real e um corpo que ancora a percepção. No virtual, a moldura compete com as pistas de continuidade e vence — o cérebro prioriza "moldura cortando parede" como sinal de "objeto exposto" em vez de "janela de observação".
 
@@ -259,9 +259,6 @@ Como o shader decide se aplica xadrez via `norm.y > 0.5` (chão), as esferas tam
         // cor do vértice * objectColor
     }
 
-> `[INSERIR IMAGEM: Print do piso quadriculado final com MSAA ativo]`  
-> *Figura 8: Chão quadriculado com projective mapping e MSAA 16x.*
-
 ### 8.7. Referência Fixa para o Xadrez (Ancoragem no Espaço)
 
 Na primeira implementação, o raio era calculado a partir da **câmera atual** (`FragPos - viewPos`). Isso causava um problema sutil: quando o usuário trocava para a câmera de revelação, o xadrez era recalculado do ponto de vista de cima, e o padrão "escorregava" pela superfície dependendo da posição da câmera.
@@ -275,8 +272,11 @@ Na primeira implementação, o raio era calculado a partir da **câmera atual** 
 
 O resultado é que o xadrez fica **pintado** no piso trapezoidal, independentemente de onde a câmera está. Isso é fiel a um Quarto de Ames real: o padrão é fisicamente pintado no chão distorcido para que, do ponto de vista específico, pareça regular. Do ponto de vista da câmera de revelação, o padrão **revela** a distorção, reforçando o impacto pedagógico do projeto.
 
-> `[INSERIR IMAGEM: Print da câmera de revelação com o chão quadriculado distorcido]`  
-> *Figura 8b: Xadrez ancorado em (0,0,0) — pintado no trapézio real, visível na câmera de revelação.*
+
+| Piso Xadrez Revelado |
+| :---: |
+| <img src="../docs/assets/chao_revelacao.png" width="100%"/> |
+> *Figura 9: Xadrez ancorado em (0,0,0) — pintado no trapézio real, visível na câmera de revelação.*
 
 ## 🏛️ 9. Rodapé e Sanca com Escala Proporcional
 
@@ -328,8 +328,10 @@ A função `get_molduras()` gera três rodapés e três sancas (uma por parede),
 2. Altura proporcional a `|Z|` (mantém espessura aparente constante).
 3. Winding correto por face (garante visibilidade com `GL_CULL_FACE`).
 
-> `[INSERIR IMAGEM: Print do rodapé e sanca em todas as três paredes]`  
-> *Figura 9: Rodapé e sanca com escala proporcional — espessura uniforme em todas as paredes.*
+| Esferas |
+| :---: |
+| <img src="../docs/assets/rodape.png" width="96%" /> |
+> *Figura 10: Rodapé e sanca com escala proporcional — espessura uniforme em todas as paredes.*
 
 ### 9.6. Z-Fighting e Offset
 
@@ -399,12 +401,6 @@ O módulo `input_handler.py` centraliza toda a lógica de mouse, registrando tr�
     configurar_callbacks(window, estado) # Registra mouse button, cursor e scroll
 
 O módulo segue a mesma filosofia de `physics.py`: **não importa nada além de `glfw`, `math`, `numpy`** — nenhuma chamada OpenGL de renderização. Isso mantém a separação entre **lógica de input** e **lógica de desenho**.
-
-> `[INSERIR IMAGEM: Print da câmera orbital em ângulo diagonal]`  
-> *Figura 10: Câmera orbital — o usuário gira ao redor do quarto para explorar a distorção.*
-
-> `[INSERIR IMAGEM: Print da câmera orbital vista por baixo do quarto]`  
-> *Figura 10b: Vista inferior — o chão trapezoidal e a "casca" do hexaedro irregular.*
 
 ### 10.6. Considerações Técnicas
 
@@ -542,11 +538,10 @@ As duas janelas (esquerda e direita) e a porta (fundo) criam uma **grade visual 
 
 Isso transforma o "encolhimento" da esfera em um **efeito dramático e imediato**, sem precisar de fantasmas ou animações.
 
-> `[INSERIR IMAGEM: Print da câmera focal com janelas e porta]`  
+| Final |
+| :---: |
+| <img src="../docs/assets/final_1.png" width="96%" /> |
 > *Figura 11: Janelas e porta distorcidas — âncoras visuais que reforçam a ilusão.*
-
-> `[INSERIR IMAGEM: Print da câmera de revelação mostrando as janelas distorcidas]`  
-> *Figura 11b: As janelas são fisicamente trapézios, mas parecem retângulos da câmera focal.*
 
 ## 🚀 Conclusão e Trabalhos Futuros
 
