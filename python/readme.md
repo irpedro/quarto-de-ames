@@ -1,9 +1,6 @@
 # Projeto Interativo: Quarto de Ames em Computação Gráfica (OpenGL)
 
 **Disciplina:** Fundamentos de Computação Gráfica  
-**Professor(es):** [Nome dos Professores]  
-**Integrantes:** Pedro Gabriel Ruiz  
-**Data:** 2026  
 
 ## 🎯 Visão Geral do Projeto
 O Quarto de Ames é uma ilusão de ótica clássica projetada para distorcer a percepção de profundidade e escala. Quando visto de um ponto de observação específico (o "buraco da fechadura"), o ambiente aparenta ser uma sala cúbica perfeitamente normal. No entanto, a sua geometria real é um hexaedro irregular e trapezoidal. 
