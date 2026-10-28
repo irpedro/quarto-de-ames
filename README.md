@@ -22,7 +22,7 @@ O Quarto de Ames é uma ilusão de ótica onde um ambiente trapezoidal aparenta 
 ## 📚 Documentação
 
 *   [Fundamentos Matemáticos](docs/matematica.md) — Derivação das coordenadas, normais, iluminação, mapeamento de textura e física.
-*   [README da Versão Python](python/README.md) — Detalhes específicos da implementação em Python.
+*   [README da Versão Python](python/readme.md) — Detalhes específicos da implementação em Python.
 *   [README da Versão C++](c/README.md) — Detalhes específicos da implementação em C++.
 
 ## 🛠️ Stack Tecnológica
